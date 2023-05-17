@@ -11,8 +11,8 @@
     <button><a href="index.html">retour à la page index</a></button>
     <br><br>
     <form action="#" method="POST">
-        <input type="text" name="username" id="username" placeholder="username"><br>
-        <input type="password" name="password" id="password" placeholder="password"><br>
+        <input type="text" name="username" id="username" placeholder="username" minlength="5" maxlength="512" required><br>
+        <input type="password" name="password" id="password" placeholder="password" minlength="4" maxlength="512" required><br>
         <input type="submit" name="submit" id="submit" value="inscription">
     </form>
 
@@ -20,7 +20,7 @@
 <br><br><br>
 <?php
 global $mysqli;
-include ("functions.php");
+include("functions.php");
 join_database();
 
 
@@ -30,23 +30,23 @@ join_database();
 //echo "<br>";
 
 
-//faire du regex pour check si le mdp
-
 if (isset($_POST['username'])){
     if ($_POST['username'] != "") {
         if (isset($_POST["password"])) {
             if ($_POST["password"] != "") {
-                if (preg_match('/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*\W).{8,512}$/', $_POST["password"])){
-                    if (isset($_POST["submit"])) {
+                if (isset($_POST["submit"])) {
+                    $password_str = mysqli_real_escape_string($mysqli, $_POST['password']);
+                    if (preg_match('/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*\W).{4,512}$/', $password_str)){
+                        $username_html = htmlspecialchars($_POST["username"]);
                         $username_str = mysqli_real_escape_string($mysqli, $_POST['username']);
                         $doublon = $mysqli->query("SELECT * FROM user WHERE username = '{$username_str}'")->fetch_assoc();
                         if ($doublon){
                             echo "Ce nom d'utilisateur est deja dans la base de donnée";
                         }
                         else{
-                            insert_fields('user', ["username" => $username_str, "password" => password_hash(mysqli_real_escape_string($mysqli, $_POST['password']), PASSWORD_BCRYPT)]);
+                            insert_field_secure($username_str, password_hash($password_str, PASSWORD_BCRYPT));
                             ?>
-                            <h1>Bonjour <?php echo $_POST["username"]; ?></h1>
+                            <h1>Bonjour <?php echo $username_html; ?></h1>
                             <?php
                         }
                     }
@@ -62,4 +62,3 @@ if (isset($_POST['username'])){
     }
 }
 ?>
-
