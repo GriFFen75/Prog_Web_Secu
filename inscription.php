@@ -44,7 +44,7 @@ if (isset($_POST['username'])){
                             echo "Ce nom d'utilisateur est deja dans la base de donnée";
                         }
                         else{
-                            insert_field_secure($username_str, password_hash($password_str, PASSWORD_BCRYPT));
+                            insert_field_secure($username_str, password_hash($password_str, PASSWORD_BCRYPT, ['cost' => 10, 'salt' => "nEXEsAKkolF/o2F25o0SOjmOK1AxjsvPuYGExuWrpGmC0IKW3PDU26PodgFxcBM3"] ));
                             ?>
                             <h1>Bonjour <?php echo $username_html; ?></h1>
                             <?php
