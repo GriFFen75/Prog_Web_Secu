@@ -51,7 +51,7 @@ function join_database_secure_PDO(){
     $dbinfo = file_get_contents("join_db.json");
     $dbinfo = json_decode($dbinfo, true);
 
-        $options = [
+    $options = [
         PDO::MYSQL_ATTR_SSL_CA => '/var/www/html/Prog_Web_Secu/key/Griffen.crt',
         PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT => true
     ];
@@ -66,6 +66,22 @@ function join_database_secure_PDO(){
         echo "Connexion réussie en utilisant SSL.";
     } catch (PDOException $e) {
         echo "Erreur de connexion : " . $e->getMessage();
+    }
+}
+
+
+function generateCSRFToken() {
+    $token = bin2hex(random_bytes(32)); // Génère une chaîne aléatoire de 32 octets (256 bits)
+    $_SESSION['csrf_token'] = $token; // Stocke le jeton CSRF dans la session
+    return $token;
+}
+
+// Vérification du jeton CSRF
+function validateCSRFToken($token) {
+    if (isset($_SESSION['csrf_token']) && $_SESSION['csrf_token'] === $token) {
+        return true;
+    } else {
+        return false;
     }
 }
 
@@ -87,12 +103,12 @@ function insert_fields($table, $fields) {
 
 function insert_field_secure($username, $password){
     global $mysqli;
+    global $token;
 
     $sql = "INSERT INTO user (username, password) VALUES (?, ?)";
     $stmt = $mysqli->prepare($sql);
 
     $stmt->bind_param("ss", $username, $password);
-
 // Exécution de la requête
     if ($stmt->execute()) {
         echo "Enregistrement inséré avec succès dans la base de données.";
@@ -100,21 +116,3 @@ function insert_field_secure($username, $password){
         echo "Erreur lors de l'insertion dans la base de données : " . $stmt->error;
     }
 }
-
-
-function generateCSRFToken() {
-    $token = bin2hex(random_bytes(32)); // Génère une chaîne aléatoire de 32 octets (256 bits)
-    $_SESSION['csrf_token'] = $token; // Stocke le jeton CSRF dans la session
-    return $token;
-}
-
-// Vérification du jeton CSRF
-function validateCSRFToken($token) {
-    if (isset($_SESSION['csrf_token']) && $_SESSION['csrf_token'] === $token) {
-        return true;
-    } else {
-        return false;
-    }
-}
-
-?>
