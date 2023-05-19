@@ -21,10 +21,10 @@ $csrfToken = generateCSRFToken();
 ?>
 <body>
     <h1>Incription</h1>
-    <button><a href="#">retour à la page index</a></button>
+    <button><a href="index.html">retour à la page index</a></button>
     <br><br>
 
-    <form action="accueil.php" method="POST">
+    <form action="#" method="POST">
         <input type="text" name="username" id="username" placeholder="username" minlength="5" maxlength="512" required><br>
         <input type="password" name="password" id="password" placeholder="password" minlength="4" maxlength="512" required><br>
         <input type="hidden" name="csrf_token" value="<?php echo $csrfToken; ?>">
