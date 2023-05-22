@@ -1,0 +1,6 @@
+{
+    "name": "griffen/pws",
+    "require": {
+        "laminas/laminas-session": "^2.16"
+    }
+}
