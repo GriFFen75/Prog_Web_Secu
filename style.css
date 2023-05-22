@@ -1,6 +1,7 @@
 body{
     background-color: black ;
     color: red;
+    font-family: OCR A Std, monospace;
 }
 h1{
     color: #fff;
@@ -15,3 +16,54 @@ h1{
             0 0 151px #0fa;
     text-align: center;
 }
+#formulaire_inscription{
+    position: absolute;
+    margin-right: auto;
+    margin-left: auto;
+}
+button{
+    color: white;
+    background-color: black;
+    border-color: #2f8ca3;
+    font-size: 1.3em;
+    text-shadow:
+            0 0 1px #fff,
+            0 0 3px #fff,
+            0 0 6px #fff,
+            0 0 12px #0fa,
+            0 0 24px #0fa,
+            0 0 49px #0fa,
+            0 0 60px #0fa,
+            0 0 100px #0fa;
+}
+input{
+    color: white;
+    background-color: black;
+    border-color: #2f8ca3;
+    font-size: 1.3em;
+    text-shadow:
+            0 0 1px #fff,
+            0 0 3px #fff,
+            0 0 6px #fff,
+            0 0 12px #0fa,
+            0 0 24px #0fa,
+            0 0 49px #0fa,
+            0 0 60px #0fa,
+            0 0 100px #0fa;
+}
+a{
+    color: white;
+    text-decoration:none;
+}
+button:hover{
+    transition: all 1s ease-out;
+    background-color: #2f8ca3;
+    color: white;
+}
+input:hover{
+    transition: all 1s ease-out;
+    background-color: #2f8ca3;
+    color: white;
+}
+
+

@@ -7,12 +7,12 @@
 </head>
 
 <body>
-<h1>Incription</h1>
+<h1>Connexion</h1>
 <button><a href="index.html">retour à la page index</a></button>
 <br><br>
-<form action="" method="POST">
-    <input type="text" name="username" placeholder="username"><br>
-    <input type="password" name="password" placeholder="password"><br>
+<form action="" method="POST" id="formulaire_connexion">
+    <input type="text" name="username" placeholder="username" required><br>
+    <input type="password" name="password" placeholder="password" required><br>
     <input type="submit" name="submit" value="connexion">
 </form>
 

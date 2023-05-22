@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <link rel="stylesheet" href="style.css">
     <title>Prog_Web_Secu</title>
-    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+    <script nonce="captcha" src="https://www.google.com/recaptcha/api.js" async defer></script>
 </head>
 <?php
 ob_start(); //pour ne pas afficher le contenue du fichier
@@ -24,7 +24,7 @@ $csrfToken = generateCSRFToken();
     <button><a href="index.html">retour à la page index</a></button>
     <br><br>
 
-    <form action="#" method="POST">
+    <form action="#" method="POST" id="formulaire_inscription">
         <input type="text" name="username" id="username" placeholder="username" minlength="5" maxlength="512" required><br>
         <input type="password" name="password" id="password" placeholder="password" minlength="4" maxlength="512" required><br>
         <input type="hidden" name="csrf_token" value="<?php echo $csrfToken; ?>">
