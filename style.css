@@ -17,9 +17,9 @@ h1{
     text-align: center;
 }
 #formulaire_inscription{
-    position: absolute;
+    /*position: absolute;
     margin-right: auto;
-    margin-left: auto;
+    margin-left: auto;*/
 }
 button{
     color: white;

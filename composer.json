@@ -1,6 +1,7 @@
 {
     "name": "griffen/pws",
     "require": {
-        "laminas/laminas-session": "^2.16"
+        "laminas/laminas-session": "^2.16",
+      "ext-mysqli": "*"
     }
 }

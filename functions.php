@@ -37,7 +37,7 @@ function join_database_secure(){
     $db = mysqli_init();
     mysqli_options ($db, MYSQLI_OPT_SSL_VERIFY_SERVER_CERT, true);
 
-    $db->ssl_set('key/client-key.pem', 'key/client-cert.pem', 'key/Griffen.crt', NULL, NULL);
+    $db->ssl_set(NULL, NULL, 'key/Griffen.crt', NULL, NULL);
     $link = mysqli_real_connect ($db, $dbinfo["domain"], $dbinfo["login"], $dbinfo["password"],$dbinfo["database"], 3306, NULL, MYSQLI_CLIENT_SSL);
     if (!$link)
     {
@@ -72,7 +72,7 @@ function join_database_secure_PDO(){
 
 function generateCSRFToken() {
     $token = bin2hex(random_bytes(32)); // Génère une chaîne aléatoire de 32 octets (256 bits)
-    $_SESSION['csrf_token'] = $token; // Stocke le jeton CSRF dans la session
+    #$_SESSION['csrf_token'] = $token; // Stocke le jeton CSRF dans la session
     return $token;
 }
 
@@ -115,4 +115,15 @@ function insert_field_secure($username, $password){
     } else {
         echo "Erreur lors de l'insertion dans la base de données : " . $stmt->error;
     }
+}
+
+
+function logout(){
+    global $container;
+    global $sessionManager;
+
+    $container->offsetUnset('username');
+    $container->offsetUnset('isLoggedIn');
+    $sessionManager->destroy();
+    echo "<script>document.location.href='index.html';</script>";
 }

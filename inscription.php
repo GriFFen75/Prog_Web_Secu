@@ -18,6 +18,16 @@ $dbinfo = json_decode($dbinfo, true);
 
 $csrfToken = generateCSRFToken();
 
+require 'vendor/autoload.php';
+
+use Laminas\Session\SessionManager;
+use Laminas\Session\Container;
+
+
+$sessionManager = new SessionManager();
+$sessionManager->start();
+$container = new Container('connexion_session', $sessionManager);
+
 ?>
 <body>
     <h1>Incription</h1>
@@ -26,7 +36,7 @@ $csrfToken = generateCSRFToken();
 
     <form action="#" method="POST" id="formulaire_inscription">
         <input type="text" name="username" id="username" placeholder="username" minlength="5" maxlength="512" required><br>
-        <input type="password" name="password" id="password" placeholder="password" minlength="4" maxlength="512" required><br>
+        <input type="password" name="password" id="password" placeholder="password" minlength="15" maxlength="512" required><br>
         <input type="hidden" name="csrf_token" value="<?php echo $csrfToken; ?>">
         <input type="submit" name="submit" id="submit" value="inscription">
         <div class="g-recaptcha" data-sitekey=<?php echo $dbinfo["site_key"]; ?>></div>
@@ -37,7 +47,13 @@ $csrfToken = generateCSRFToken();
 <br><br><br>
 <?php
 global $mysqli;
-join_database();
+join_database_secure();
+
+if (isset($container->isLoggedIn) && $container->isLoggedIn) {
+    // Redirige vers la page authentifiée
+    header('Location: bonjour.php');
+    exit;
+}
 #join_database_secure();
 #join_database_secure_PDO();
 
@@ -48,9 +64,9 @@ join_database();
 
 
 if (isset($_POST['username'])){
-    if ($_POST['username'] != "") {
+    if (is_string($_POST["username"]) && $_POST['username'] != "") {
         if (isset($_POST["password"])) {
-            if ($_POST["password"] != "") {
+            if (is_string($_POST["password"]) && $_POST["password"] != "") {
                 if (isset($_POST["submit"])) {
 
 
@@ -89,12 +105,12 @@ if (isset($_POST['username'])){
                                     echo "Ce nom d'utilisateur est deja dans la base de donnée";
                                 }
                                 else{
-                                    insert_field_secure($username_str, password_hash($password_str, PASSWORD_BCRYPT, ['cost' => 10, 'salt' => "lameilleurdefensecestlattaaque"] ));
-                                     ?>
+                                    insert_field_secure($username_str, password_hash($dbinfo["prefix"].$password_str.$dbinfo["sufix"], PASSWORD_BCRYPT));
+                                    $container->username = $username_str;
+                                    echo $container->username;
+                                    $container->isLoggedIn = true;
 
-                                    <h1>Bonjour <?php echo $username_html; ?></h1>
-
-                                    <?php
+                                    echo "<script>document.location.href='bonjour.php';</script>";
                                 }
                             }
                             else{

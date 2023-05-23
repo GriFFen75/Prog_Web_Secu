@@ -17,11 +17,41 @@ $dbinfo = json_decode($dbinfo, true);
 
 $csrfToken = generateCSRFToken();
 
+require 'vendor/autoload.php';
+
+use Laminas\Session\SessionManager;
+use Laminas\Session\Container;
+
+
+$sessionManager = new SessionManager();
+$sessionManager->start();
+
+if (!isset($container->isLoggedIn) || !$container->isLoggedIn) {
+    // Redirige vers la page de connexion
+    print_r("pas bon");
+    echo "<br><button><a href='index.html'>retour à la page index</a></button>";
+    //echo "<script>document.location.href='index.html';</script>";
+    exit();
+}
+
+
+$container = new Container('my_session');
+$username = $container->username;
+
 ?>
 <body>
 <h1>Bonjour tout le monde</h1>
 <button><a href="index.html">retour à la page index</a></button>
 <br><br>
+<h2>Bienvenue, <?php echo $username ?></h2>
+<form action="" method="post">
+    <input type="submit" name="submit" value="logout">
+</form>
 
 </body>
 </html>
+<?php
+if (isset($_POST["submit"])){
+    logout();
+}
+?>
