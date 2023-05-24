@@ -27,6 +27,10 @@ $container->csrftoken = $csrfToken;
 
 global $mysqli;
 join_database_secure();
+
+if (isset($_POST["submit"])){
+    logout();
+}
 ?>
 
 <!DOCTYPE html>
@@ -38,10 +42,16 @@ join_database_secure();
 </head>
 <body>
     <h1>Bonjour tout le monde</h1>
-    <button id="bouton_inscription"><a href="inscription.php">Direction le formulaire d'inscription</a></button>
-    <br>
-    <button id="bouton_connexion"><a href="connexion.php">Direction le formulaire de connexion</a></button>
-    <br>
+    <?php
+    if (!isset($container->isLoggedIn) || !$container->isLoggedIn){
+        ?>
+        <button id="bouton_inscription"><a href="inscription.php">Direction le formulaire d'inscription</a></button>
+        <br>
+        <button id="bouton_connexion"><a href="connexion.php">Direction le formulaire de connexion</a></button>
+        <br>
+        <?php
+    }
+    ?>
     <button><a href="https://www.youtube.com/watch?v=xvFZjo5PgG0">Direction l'easter Eggs</a></button>
     <br>
     <?php
@@ -66,6 +76,11 @@ join_database_secure();
             <button id="bouton_admin"><a href="admin.php">Direction la page d'administration</a></button>
             <?php
         }
+        ?>
+        <form action="" method="post">
+            <input type="submit" name="submit" value="logout">
+        </form>
+    <?php
     }
     ?>
 

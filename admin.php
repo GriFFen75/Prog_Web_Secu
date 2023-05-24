@@ -54,7 +54,7 @@ if (isset($_POST["submit"])){
 <br><br>
 <button><a href="index.php">retour à la page index</a></button>
 <br>
-<button><a href="https://www.youtube.com/watch?v=xvFZjo5PgG0">Direction l'easter Eggs administrateur</a></button>
+<button><a href="https://www.youtube.com/watch?v=Ew4Doli6qy0">Direction l'easter Eggs administrateur</a></button>
 <form action="" method="post">
     <input type="submit" name="submit" value="logout">
 </form>
