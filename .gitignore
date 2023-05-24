@@ -1,1 +1,11 @@
 /vendor/
+join_db.json
+.gitignore
+.idea/.gitignore
+.idea/Prog_Web_Secu.iml
+.idea/dataSources.xml
+.idea/modules.xml
+.idea/php.xml
+test/1.php
+test/2.php
+test/3.php

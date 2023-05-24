@@ -38,6 +38,7 @@ if (isset($container->isLoggedIn) && $container->isLoggedIn) {
     <meta charset="UTF-8">
     <link rel="stylesheet" href="style.css">
     <title>Prog_Web_Secu</title>
+    <script nonce="captcha" src="https://www.google.com/recaptcha/api.js" async defer></script>
 </head>
 
 <body>
@@ -49,7 +50,7 @@ if (isset($container->isLoggedIn) && $container->isLoggedIn) {
     <input type="password" name="password" id="password" placeholder="password" minlength="4" maxlength="512" required><br>
     <input type="hidden" name="csrf_token" id="csrf_token" value="<?php echo $csrfToken; ?>">
     <input type="submit" name="submit" value="connexion">
-    <!-- <div class="g-recaptcha" data-sitekey=<?php // echo $dbinfo["site_key"]; ?>></div> -->
+    <div class="g-recaptcha" data-sitekey=<?php echo $dbinfo["site_key"]; ?>></div>
 
 </form>
 

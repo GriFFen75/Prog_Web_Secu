@@ -34,66 +34,70 @@ try {
             if (isset($_POST["password"])) {
                 if (is_string($_POST["password"]) && $_POST["password"] != "") {
                     if (isset($_POST["submit"])) {
+                        if (isset($_POST['g-recaptcha-response'])) {
+
+                            $recaptcha_response = $_POST['g-recaptcha-response'];
+                            $secret_key = $dbinfo["secret_key"];
+
+                            $url = 'https://www.google.com/recaptcha/api/siteverify';
+                            $data = array(
+                                'secret' => $secret_key,
+                                'response' => $recaptcha_response
+                            );
+
+                            $options = array(
+                                'http' => array(
+                                    'header' => "Content-type: application/x-www-form-urlencoded\r\n",
+                                    'method' => 'POST',
+                                    'content' => http_build_query($data)
+                                )
+                            );
+
+                            $context = stream_context_create($options);
+                            $result = file_get_contents($url, false, $context);
+                            $response = json_decode($result, true);
 
 
-                        $recaptcha_response = $_POST['g-recaptcha-response'];
-                        $secret_key = $dbinfo["secret_key"];
+                            if ($response['success']) {
+                                #header('X-CSRF-Token : ' . $csrfToken);      && validateCSRFToken($_SERVER['HTTP_X_CSRF_Token'])
+                                if (isset($csrftoken) && isset($_POST["csrf_token"])) {
 
-                        $url = 'https://www.google.com/recaptcha/api/siteverify';
-                        $data = array(
-                            'secret' => $secret_key,
-                            'response' => $recaptcha_response
-                        );
+                                    if ($_POST["csrf_token"] === $csrftoken && $_SERVER["HTTPS"] === "on" && $_SERVER['HTTP_HOST'] === "pws.local" && $_SERVER["REQUEST_URI"] === "/traitement_inscription.php") {
 
-                        $options = array(
-                            'http' => array(
-                                'header' => "Content-type: application/x-www-form-urlencoded\r\n",
-                                'method' => 'POST',
-                                'content' => http_build_query($data)
-                            )
-                        );
+                                        $password_str = mysqli_real_escape_string($mysqli, $_POST['password']);
+                                        if (preg_match('/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*\W).{16,512}$/', $password_str)) {
+                                            $username_html = htmlspecialchars($_POST["username"]);
+                                            $username_str = mysqli_real_escape_string($mysqli, $_POST['username']);
 
-                        $context = stream_context_create($options);
-                        $result = file_get_contents($url, false, $context);
-                        $response = json_decode($result, true);
+                                            $query = "SELECT * FROM user WHERE username = ?";
+                                            $stmt = $mysqli->prepare($query);
+                                            $stmt->bind_param("s", $username_str);
+                                            $stmt->execute();
+                                            $result = $stmt->get_result();
+                                            $doublon = $result->fetch_assoc();
 
+                                            #$doublon = $mysqli->query("SELECT * FROM user WHERE username = '{$username_str}'")->fetch_assoc();
+                                            if ($doublon) {
+                                                #echo "Ce nom d'utilisateur est deja dans la base de donnée";
+                                            } else {
+                                                insert_user_secure($username_str, password_hash($dbinfo["prefix"] . $password_str . $dbinfo["sufix"], PASSWORD_BCRYPT));
+                                                $container->username = $username_str;
+                                                #echo "container username : ".$container->username;
+                                                $container->isLoggedIn = true;
 
-                        if ($response['success']) {
-                            #header('X-CSRF-Token : ' . $csrfToken);      && validateCSRFToken($_SERVER['HTTP_X_CSRF_Token'])
-                            if ($_POST["csrf_token"] === $csrftoken && $_SERVER["HTTPS"] === "on" && $_SERVER['HTTP_HOST'] === "pws.local" && $_SERVER["REQUEST_URI"] === "/traitement_inscription.php") {
-
-                                $password_str = mysqli_real_escape_string($mysqli, $_POST['password']);
-                                if (preg_match('/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*\W).{4,512}$/', $password_str)) {
-                                    $username_html = htmlspecialchars($_POST["username"]);
-                                    $username_str = mysqli_real_escape_string($mysqli, $_POST['username']);
-
-                                    $query = "SELECT * FROM user WHERE username = ?";
-                                    $stmt = $mysqli->prepare($query);
-                                    $stmt->bind_param("s", $username_str);
-                                    $stmt->execute();
-                                    $result = $stmt->get_result();
-                                    $doublon = $result->fetch_assoc();
-
-                                    #$doublon = $mysqli->query("SELECT * FROM user WHERE username = '{$username_str}'")->fetch_assoc();
-                                    if ($doublon) {
-                                        #echo "Ce nom d'utilisateur est deja dans la base de donnée";
+                                                header("Location: bonjour.php");
+                                                exit();
+                                            }
+                                        } else {
+                                            #echo "Le mot de passe n'est pas assez fort";
+                                        }
                                     } else {
-                                        insert_user_secure($username_str, password_hash($dbinfo["prefix"] . $password_str . $dbinfo["sufix"], PASSWORD_BCRYPT));
-                                        $container->username = $username_str;
-                                        #echo "container username : ".$container->username;
-                                        $container->isLoggedIn = true;
-
-                                        header("Location: bonjour.php");
-                                        exit();
+                                        #echo "pas de jeton CSRF et verif du lien faux";
                                     }
                                 } else {
-                                    #echo "Le mot de passe n'est pas assez fort";
+                                    #print_r("probleme avec le katchan");
                                 }
-                            } else {
-                                #echo "pas de jeton CSRF et verif du lien faux";
                             }
-                        } else {
-                            #print_r("probleme avec le katchan");
                         }
                     }
                 }
