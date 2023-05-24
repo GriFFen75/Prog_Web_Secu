@@ -14,7 +14,7 @@ $container = new Container('connexion_session', $sessionManager);
 
 if (!isset($container->isLoggedIn) || !$container->isLoggedIn) {
     // Redirige vers la page de connexion
-    header("Location: index.html");
+    header("Location: index.php");
     exit();
 }
 if (isset($_POST["submit"])){
@@ -40,7 +40,7 @@ $username = $container->username;
 ?>
 <body>
 <h1>Est-ce que c'est bon pour vous ?</h1>
-<button><a href="index.html">retour à la page index</a></button>
+<button><a href="index.php">retour à la page index</a></button>
 <br><br>
 <h2>Bienvenue, <?php echo $username ?></h2>
 <form action="" method="post">

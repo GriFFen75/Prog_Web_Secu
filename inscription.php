@@ -44,7 +44,7 @@ if (isset($container->isLoggedIn) && $container->isLoggedIn) {
 
 <body>
     <h1>Incription</h1>
-    <button><a href="index.html">retour à la page index</a></button>
+    <button><a href="index.php">retour à la page index</a></button>
     <br><br>
 
     <form action="traitement_inscription.php" method="POST" id="formulaire_inscription">

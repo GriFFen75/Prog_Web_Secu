@@ -21,51 +21,60 @@ $container = new Container('connexion_session', $sessionManager);
 
 $csrftoken = isset($container->csrftoken) ? $container->csrftoken : null; // Retrieve the data from the container
 
-
 global $mysqli;
 join_database_secure();
 
-if (isset($_POST['username'])){
-    if (is_string($_POST["username"]) && $_POST['username'] != "") {
-        if (isset($_POST["password"])) {
-            if (is_string($_POST["password"]) && $_POST["password"] != "") {
-                if (isset($_POST["submit"])) {
-                    #print_r("container : ".$csrftoken);
-                    #echo "<br>";
-                    #print_r("\$_POST : ".$_POST["csrf_token"]);
-                    if ($_POST["csrf_token"] === $csrftoken && $_SERVER["HTTPS"] === "on" && $_SERVER['HTTP_HOST'] === "pws.local" && $_SERVER["REQUEST_URI"] === "/traitement_connexion.php") {
-                        #print_r($mysqli);
-                        $password_str = mysqli_real_escape_string($mysqli, $_POST['password']);
+try {
+    if (isset($_POST['username'])) {
+        if (is_string($_POST["username"]) && $_POST['username'] != "") {
+            if (isset($_POST["password"])) {
+                if (is_string($_POST["password"]) && $_POST["password"] != "") {
+                    if (isset($_POST["submit"])) {
+                        #print_r("container : ".$csrftoken);
+                        #echo "<br>";
+                        #print_r("\$_POST : ".$_POST["csrf_token"]);
+                        if ($_POST["csrf_token"] === $csrftoken && $_SERVER["HTTPS"] === "on" && $_SERVER['HTTP_HOST'] === "pws.local" && $_SERVER["REQUEST_URI"] === "/traitement_connexion.php") {
+                            #print_r($mysqli);
+                            $password_str = mysqli_real_escape_string($mysqli, $_POST['password']);
 
-                        $username_html = htmlspecialchars($_POST["username"]);
-                        $username_str = mysqli_real_escape_string($mysqli, $_POST['username']);
-                        $present = $mysqli->query("SELECT * FROM user WHERE username = '{$username_str}'")->fetch_assoc();
-                        if ($present){
-                            #print_r($present);
-                            if (!password_verify($dbinfo["prefix"].$password_str.$dbinfo["sufix"], $present["password"])){
-                                echo "c'est pas le bon mot de passe";
-                            }
-                            else{
-                                $container->username = $username_str;
-                                $container->isLoggedIn = true;
+                            $username_html = htmlspecialchars($_POST["username"]);
+                            $username_str = mysqli_real_escape_string($mysqli, $_POST['username']);
 
-                                #echo "<script>document.location.href='bonjour.php';</script>";
-                                header("Location: bonjour.php");
+                            $stmt = $mysqli->prepare("SELECT * FROM user WHERE username = ?");
+                            $stmt->bind_param("s", $username_str);
+                            $stmt->execute();
+                            $result = $stmt->get_result();
+                            $present = $result->fetch_assoc();
+
+                            if ($present) {
+                                #print_r($present);
+                                if (!password_verify($dbinfo["prefix"] . $password_str . $dbinfo["sufix"], $present["password"])) {
+                                    #echo "c'est pas le bon mot de passe";
+                                } else {
+                                    $container->username = $username_str;
+                                    $container->isLoggedIn = true;
+
+                                    #echo "<script>document.location.href='bonjour.php';</script>";
+                                    header("Location: bonjour.php");
+                                    exit();
+                                }
+                            } else {
+                                #echo "<script>document.location.href='connexion.php';</script>";
+                                header("Location: connexion.php");
                                 exit();
+                                #echo "non non non";
                             }
-                        }
-                        else{
-                            #echo "<script>document.location.href='connexion.php';</script>";
-                            header("Location: connexion.php");
-                            exit();
-                            #echo "non non non";
-                        }
 
+                        }
                     }
                 }
             }
         }
     }
+}
+catch (mysqli_sql_exception){
+    header("Location: index.php");
+    exit();
 }
 
 ?>

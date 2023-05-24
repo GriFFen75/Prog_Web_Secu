@@ -42,7 +42,7 @@ if (isset($container->isLoggedIn) && $container->isLoggedIn) {
 
 <body>
 <h1>Connexion</h1>
-<button><a href="index.html">retour à la page index</a></button>
+<button><a href="index.php">retour à la page index</a></button>
 <br><br>
 <form action="traitement_connexion.php" method="POST" id="formulaire_connexion">
     <input type="text" name="username" id="username" placeholder="username" minlength="5" maxlength="512" required><br>

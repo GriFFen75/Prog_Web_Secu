@@ -8,7 +8,7 @@
 
 <body>
 <h1>Accueil</h1>
-<button><a href="index.html">retour à la page index</a></button>
+<button><a href="index.php">retour à la page index</a></button>
 <br><br>
 
 </body>

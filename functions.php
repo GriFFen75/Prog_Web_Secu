@@ -126,6 +126,6 @@ function logout(){
     $container->offsetUnset('username');
     $container->offsetUnset('isLoggedIn');
     $sessionManager->destroy();
-    header("Location: index.html");
+    header("Location: index.php");
     exit();
 }
