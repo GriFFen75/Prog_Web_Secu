@@ -27,6 +27,8 @@ function join_database() {
 }
 
 function join_database_secure(){
+    global $mysqli;
+
     ini_set ('error_reporting', E_ALL);
     ini_set ('display_errors', '1');
     error_reporting (E_ALL|E_STRICT);
@@ -34,16 +36,16 @@ function join_database_secure(){
     $dbinfo = file_get_contents("join_db.json");
     $dbinfo = json_decode($dbinfo, true);
 
-    $db = mysqli_init();
-    mysqli_options ($db, MYSQLI_OPT_SSL_VERIFY_SERVER_CERT, true);
+    $mysqli = mysqli_init();
+    mysqli_options ($mysqli, MYSQLI_OPT_SSL_VERIFY_SERVER_CERT, true);
 
-    $db->ssl_set(NULL, NULL, 'key/Griffen.crt', NULL, NULL);
-    $link = mysqli_real_connect ($db, $dbinfo["domain"], $dbinfo["login"], $dbinfo["password"],$dbinfo["database"], 3306, NULL, MYSQLI_CLIENT_SSL);
+    $mysqli->ssl_set(NULL, NULL, 'key/Griffen.crt', NULL, NULL);
+    $link = mysqli_real_connect ($mysqli, $dbinfo["domain"], $dbinfo["login"], $dbinfo["password"],$dbinfo["database"], 3306, NULL, MYSQLI_CLIENT_SSL);
     if (!$link)
     {
         die ('Connect error (' . mysqli_connect_errno() . '): ' . mysqli_connect_error() . "\n");
     }
-     return $db;
+    return $mysqli;
 }
 
 function join_database_secure_PDO(){
@@ -103,7 +105,6 @@ function insert_fields($table, $fields) {
 
 function insert_field_secure($username, $password){
     global $mysqli;
-    global $token;
 
     $sql = "INSERT INTO user (username, password) VALUES (?, ?)";
     $stmt = $mysqli->prepare($sql);

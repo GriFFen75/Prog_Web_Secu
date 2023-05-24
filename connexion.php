@@ -5,8 +5,15 @@ if (isset($container->isLoggedIn) && $container->isLoggedIn) {
     exit;
 }
     //require
+ob_start(); //pour ne pas afficher le contenue du fichier
+require ("join_db.json");
+$data = ob_get_clean();
 require "vendor/autoload.php";
 require "functions.php";
+
+//importe du fichier de variable
+$dbinfo = file_get_contents("join_db.json");
+$dbinfo = json_decode($dbinfo, true);
 
 //génération du token
 $csrfToken = generateCSRFToken();

@@ -21,10 +21,6 @@ $container = new Container('connexion_session', $sessionManager);
 
 $csrftoken = isset($container->csrftoken) ? $container->csrftoken : null; // Retrieve the data from the container
 
-#if ($csrftoken){
-#    echo "<br><br>le container est remplie<br><br>";
-#}
-#print_r($container);
 
 global $mysqli;
 join_database_secure();
@@ -38,14 +34,14 @@ if (isset($_POST['username'])){
                     #echo "<br>";
                     #print_r("\$_POST : ".$_POST["csrf_token"]);
                     if ($_POST["csrf_token"] === $csrftoken && $_SERVER["HTTPS"] === "on" && $_SERVER['HTTP_HOST'] === "pws.local" && $_SERVER["REQUEST_URI"] === "/traitement_connexion.php") {
-                        print_r($mysqli);
+                        #print_r($mysqli);
                         $password_str = mysqli_real_escape_string($mysqli, $_POST['password']);
 
                         $username_html = htmlspecialchars($_POST["username"]);
                         $username_str = mysqli_real_escape_string($mysqli, $_POST['username']);
                         $present = $mysqli->query("SELECT * FROM user WHERE username = '{$username_str}'")->fetch_assoc();
                         if ($present){
-                            print_r($present);
+                            #print_r($present);
                             if (!password_verify($dbinfo["prefix"].$password_str.$dbinfo["sufix"], $present["password"])){
                                 echo "c'est pas le bon mot de passe";
                             }

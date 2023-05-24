@@ -1,3 +1,23 @@
+<?php
+ob_start(); //pour ne pas afficher le contenue du fichier
+require "join_db.json";
+$data = ob_get_clean();
+require 'vendor/autoload.php';
+require "functions.php";
+
+use Laminas\Session\SessionManager;
+use Laminas\Session\Container;
+
+$sessionManager = new SessionManager();
+$sessionManager->start();
+$container = new Container('connexion_session', $sessionManager);
+
+if (!isset($container->isLoggedIn) || !$container->isLoggedIn) {
+    // Redirige vers la page de connexion
+    header("Location: index.html");
+    exit();
+}
+?>
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -6,36 +26,12 @@
     <title>Prog_Web_Secu</title>
 </head>
 <?php
-ob_start(); //pour ne pas afficher le contenue du fichier
-require ("join_db.json");
-$data = ob_get_clean();
-
-require ("functions.php");
 
 $dbinfo = file_get_contents("join_db.json");
 $dbinfo = json_decode($dbinfo, true);
 
 $csrfToken = generateCSRFToken();
 
-require 'vendor/autoload.php';
-
-use Laminas\Session\SessionManager;
-use Laminas\Session\Container;
-
-
-$sessionManager = new SessionManager();
-$sessionManager->start();
-
-if (!isset($container->isLoggedIn) || !$container->isLoggedIn) {
-    // Redirige vers la page de connexion
-    print_r("pas bon");
-    echo "<br><button><a href='index.html'>retour à la page index</a></button>";
-    //echo "<script>document.location.href='index.html';</script>";
-    exit();
-}
-
-
-$container = new Container('my_session');
 $username = $container->username;
 
 ?>
