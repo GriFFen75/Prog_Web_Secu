@@ -6,6 +6,6 @@ join_db.json
 .idea/dataSources.xml
 .idea/modules.xml
 .idea/php.xml
-test/1.php
-test/2.php
-test/3.php
+/test/
+/log/
+/key/
