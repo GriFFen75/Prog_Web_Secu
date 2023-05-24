@@ -17,6 +17,9 @@ if (!isset($container->isLoggedIn) || !$container->isLoggedIn) {
     header("Location: index.html");
     exit();
 }
+if (isset($_POST["submit"])){
+    logout();
+}
 ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -36,7 +39,7 @@ $username = $container->username;
 
 ?>
 <body>
-<h1>Bonjour tout le monde</h1>
+<h1>Est-ce que c'est bon pour vous ?</h1>
 <button><a href="index.html">retour à la page index</a></button>
 <br><br>
 <h2>Bienvenue, <?php echo $username ?></h2>
@@ -46,8 +49,3 @@ $username = $container->username;
 
 </body>
 </html>
-<?php
-if (isset($_POST["submit"])){
-    logout();
-}
-?>

@@ -103,7 +103,7 @@ function insert_fields($table, $fields) {
     return 0;
 }
 
-function insert_field_secure($username, $password){
+function insert_user_secure($username, $password){
     global $mysqli;
 
     $sql = "INSERT INTO user (username, password) VALUES (?, ?)";
@@ -112,9 +112,9 @@ function insert_field_secure($username, $password){
     $stmt->bind_param("ss", $username, $password);
 // Exécution de la requête
     if ($stmt->execute()) {
-        echo "Enregistrement inséré avec succès dans la base de données.";
+        #echo "Enregistrement inséré avec succès dans la base de données.";
     } else {
-        echo "Erreur lors de l'insertion dans la base de données : " . $stmt->error;
+        #echo "Erreur lors de l'insertion dans la base de données : " . $stmt->error;
     }
 }
 
@@ -126,5 +126,6 @@ function logout(){
     $container->offsetUnset('username');
     $container->offsetUnset('isLoggedIn');
     $sessionManager->destroy();
-    echo "<script>document.location.href='index.html';</script>";
+    header("Location: index.html");
+    exit();
 }

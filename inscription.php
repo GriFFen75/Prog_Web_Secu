@@ -1,9 +1,5 @@
 <?php
-if (isset($container->isLoggedIn) && $container->isLoggedIn) {
-    // Redirige vers la page authentifiée
-    header('Location: bonjour.php');
-    exit;
-}
+
 //require
 ob_start(); //pour ne pas afficher le contenue du fichier
 require ("join_db.json");
@@ -30,6 +26,12 @@ $container = new Container('connexion_session', $sessionManager);
 //stockage du token
 $container->csrftoken = $csrfToken;
 #print_r($container->csrftoken);
+
+if (isset($container->isLoggedIn) && $container->isLoggedIn) {
+    // Redirige vers la page authentifiée
+    header('Location: bonjour.php');
+    exit;
+}
 ?>
 <!DOCTYPE html>
 <html lang="fr">

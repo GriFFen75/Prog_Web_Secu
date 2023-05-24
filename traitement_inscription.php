@@ -80,9 +80,9 @@ if (isset($_POST['username'])){
                                     echo "Ce nom d'utilisateur est deja dans la base de donnée";
                                 }
                                 else{
-                                    insert_field_secure($username_str, password_hash($dbinfo["prefix"].$password_str.$dbinfo["sufix"], PASSWORD_BCRYPT));
+                                    insert_user_secure($username_str, password_hash($dbinfo["prefix"].$password_str.$dbinfo["sufix"], PASSWORD_BCRYPT));
                                     $container->username = $username_str;
-                                    echo "container username : ".$container->username;
+                                    #echo "container username : ".$container->username;
                                     $container->isLoggedIn = true;
 
                                     header("Location: bonjour.php");
